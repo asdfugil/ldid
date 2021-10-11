@@ -12,7 +12,7 @@ env:
   OPENSSL_VERSION: 3.0.0
 
 jobs:
-  build-linux:
+  build-linux-windows:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -60,10 +60,12 @@ jobs:
           echo "LDFLAGS=-L${ROOT}/usr/lib" >> $GITHUB_ENV
           echo "PKG_CONFIG_PATH=${ROOT}/usr/lib/pkgconfig" >> $GITHUB_ENV
           echo "LD_LIBRARY_PATH=${ROOT}/usr/lib" >> $GITHUB_ENV
-          if grep 64 <<< ${TRIPLE}; then
+          if grep 64 <<< ${TRIPLE} && grep linux <<< ${TRIPLE}; then
             echo "OSSL_CROSS=linux-generic64" >> $GITHUB_ENV
-          else
+          elif grep linux <<< ${TRIPLE}; then
             echo "OSSL_CROSS=linux-generic32" >> $GITHUB_ENV
+          elif grep mingw <<< ${TRIPLE}; then
+            echo "OSSL_CROSS=$(cut -d- -f3 <<< ${TRIPLE})" >>> $GITHUB_ENV
           fi
 
       - name: build libplist
