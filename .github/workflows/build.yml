@@ -64,8 +64,10 @@ jobs:
             echo "OSSL_CROSS=linux-generic64" >> $GITHUB_ENV
           elif grep linux <<< ${TRIPLE}; then
             echo "OSSL_CROSS=linux-generic32" >> $GITHUB_ENV
-          elif grep mingw <<< ${TRIPLE}; then
-            echo "OSSL_CROSS=$(cut -d- -f3 <<< ${TRIPLE})" >> $GITHUB_ENV
+          elif [ "${TRIPLE}" = "i686-w64-mingw32" ]; then
+            echo "OSSL_CROSS=mingw" >> $GITHUB_ENV
+          elif [ "${TRIPLE}" = "x86_64-w64-mingw32 ]; then
+            echo "OSSL_CROSS=mingw64" >> $$GITHUB_ENV
           fi
 
       - name: build libplist
