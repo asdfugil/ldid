@@ -63,7 +63,7 @@ jobs:
           if grep 64 <<< ${TRIPLE} && grep linux <<< ${TRIPLE}; then
             echo "OSSL_CROSS=linux-generic64" >> $GITHUB_ENV
           elif grep linux <<< ${TRIPLE}; then
-            echo "OSSL_CROSS=linux-generic32" >> $GITHUB_ENV
+            echo "OSSL_CROSS=linux-generic32" >>> $GITHUB_ENV
           elif grep mingw <<< ${TRIPLE}; then
             echo "OSSL_CROSS=$(cut -d- -f3 <<< ${TRIPLE})" >>> $GITHUB_ENV
           fi
