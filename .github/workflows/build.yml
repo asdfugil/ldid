@@ -273,11 +273,15 @@ jobs:
           echo "LDID_VERSION=$(echo "$(git describe --tags --abbrev=0)")" >> $GITHUB_ENV
       - name: setup toolchain
         run: |
-          sudo apt-get install -y ccache clang-10 build-essential
+          sudo apt-get install -y ccache clang-10 build-essential lld
           wget -q -nc -P ${DOWNLOAD_PATH} https://ftp.freebsd.org/pub/FreeBSD/releases/amd64/13.0-RELEASE/base.txz
           tar xJf ${DOWNLOAD_PATH}/base.txz -C ${ROOT}
-          echo "CC=ccache clang --target=${TRIPLE}" >> $GITHUB_ENV
-          echo "CXX=ccache clang++ --target=${TRIPLE}" >> $GITHUB_ENV
+          echo "CC=ccache clang -target ${TRIPLE}" >> $GITHUB_ENV
+          echo "CXX=ccache clang++ -target ${TRIPLE}" >> $GITHUB_ENV
+          echo "LD=lld" >> $GITHUB_ENV
+          echo "BUILD_CC=ccache clang" >> $GITHUB_ENV
+          echo "BUILD_CXX=ccache clang++" >> $GITHUB_ENV
+          echo "BUILD_LD=ld" >> $$GITHUB_ENV
           echo "CFLAGS=-static -isysroot ${ROOT} -isystem ${ROOT}/usr/include" >> $GITHUB_ENV
           echo "LDFLAGS=-L${ROOT}/usr/lib" >> $GITHUB_ENV
           echo "PKG_CONFIG_PATH=${ROOT}/usr/libdata/pkgconfig" >> $GITHUB_ENV
