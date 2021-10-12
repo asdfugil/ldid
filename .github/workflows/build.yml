@@ -243,7 +243,7 @@ jobs:
         with:
           name: ldid_macos_arm64
           path: ldid
-  build-linux:
+  build-freebsd:
     runs-on: ubuntu-latest
     env:
       triple: x86_64-pc-freebsd
