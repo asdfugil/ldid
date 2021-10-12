@@ -273,12 +273,13 @@ jobs:
           echo "LDID_VERSION=$(echo "$(git describe --tags --abbrev=0)")" >> $GITHUB_ENV
       - name: setup toolchain
         run: |
-          sudo apt-get install -y ccache clang-10 build-essential lld
+          sudo apt-get install -y ccache clang-10 build-essential lld compiler-rt
           wget -q -nc -P ${DOWNLOAD_PATH} https://ftp.freebsd.org/pub/FreeBSD/releases/amd64/13.0-RELEASE/base.txz
           tar xJf ${DOWNLOAD_PATH}/base.txz -C ${ROOT}
           echo "CC=ccache clang -target ${TRIPLE}" >> $GITHUB_ENV
           echo "CXX=ccache clang++ -target ${TRIPLE}" >> $GITHUB_ENV
           echo "LD=lld" >> $GITHUB_ENV
+          echo "STRIP=llvm-strip" >> $$GITHUB_ENV
           echo "BUILD_CC=ccache clang" >> $GITHUB_ENV
           echo "BUILD_CXX=ccache clang++" >> $GITHUB_ENV
           echo "BUILD_LD=ld" >> $$GITHUB_ENV
@@ -307,7 +308,7 @@ jobs:
           ${CC} ${CFLAGS} -Os -c -o lookup2.o lookup2.c
           ${CXX} ${CFLAGS} -Os -c -o ldid.o ldid.cpp -std=c++11 -DLDID_VERSION=\"${LDID_VERSION}\"
           ${CXX} ${CFLAGS} -Os -std=c++11 ldid.o lookup2.o ${ROOT}/usr/lib/libplist-2.0.a ${ROOT}/usr/lib/libcrypto.a -o ldid
-          ${TRIPLE}-strip ldid
+          llvm-strip ldid
       - uses: actions/upload-artifact@v1
         with:
           name: ldid_freebsd_x86_64
