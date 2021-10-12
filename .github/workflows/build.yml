@@ -273,7 +273,7 @@ jobs:
           echo "LDID_VERSION=$(echo "$(git describe --tags --abbrev=0)")" >> $GITHUB_ENV
       - name: setup toolchain
         run: |
-          sudo apt-get install -y ccache clang-10
+          sudo apt-get install -y ccache clang-10 build-essential
           wget -q -nc -P ${DOWNLOAD_PATH} https://ftp.freebsd.org/pub/FreeBSD/releases/amd64/13.0-RELEASE/base.txz
           tar xJf ${DOWNLOAD_PATH}/base.txz -C ${ROOT}
           echo "CC=ccache clang --target=${TRIPLE}" >> $GITHUB_ENV
@@ -308,6 +308,16 @@ jobs:
         with:
           name: ldid_freebsd_x86_64
           path: ldid
+      - name: Upload Release Asset FreeBSD x86_64
+        uses: actions/upload-release-asset@v1
+        if: ${{ github.event_name == 'release' }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ldid
+          asset_name: ldid_freebsd_x86_64
+          asset_content_type: application/octet-stream
 
   upload-macos-releases:
     runs-on: ubuntu-latest
