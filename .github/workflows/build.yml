@@ -284,9 +284,9 @@ jobs:
           echo "BUILD_CXX=ccache clang++" >> $GITHUB_ENV
           echo "BUILD_LD=ld" >> $$GITHUB_ENV
           echo "CFLAGS=-static -isysroot ${ROOT} -isystem ${ROOT}/usr/include" >> $GITHUB_ENV
-          #echo "LDFLAGS=-L${ROOT}/usr/lib" >> $GITHUB_ENV
+          echo "LDFLAGS=-L${ROOT}/usr/lib" >> $GITHUB_ENV
           echo "PKG_CONFIG_PATH=${ROOT}/usr/libdata/pkgconfig" >> $GITHUB_ENV
-          echo "LD_LIBRARY_PATH=${ROOT}/usr/lib" >> $GITHUB_ENV
+          #echo "LD_LIBRARY_PATH=${ROOT}/usr/lib" >> $GITHUB_ENV
       - name: build libplist
         run: |
           wget -q -nc -P ${DOWNLOAD_PATH} https://github.com/libimobiledevice/libplist/releases/download/${LIBPLIST_VERSION}/libplist-${LIBPLIST_VERSION}.tar.bz2
