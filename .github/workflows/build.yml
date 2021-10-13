@@ -278,7 +278,7 @@ jobs:
           tar xJf ${DOWNLOAD_PATH}/base.txz -C ${ROOT}
           chmod -R 755 ${ROOT}
           echo "CC=ccache clang -fuse-ld=lld -target ${TRIPLE}" >> $GITHUB_ENV
-          echo "CXX=ccache clang++ -fuse-ld=/usr/bin/lld -target ${TRIPLE}" >> $GITHUB_ENV
+          echo "CXX=ccache clang++ -fuse-ld=lld -target ${TRIPLE}" >> $GITHUB_ENV
           echo "LD=lld" >> $GITHUB_ENV
           echo "STRIP=llvm-strip" >> $$GITHUB_ENV
           echo "BUILD_CC=ccache clang" >> $GITHUB_ENV
