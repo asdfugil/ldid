@@ -309,7 +309,7 @@ jobs:
         run: |
           ${CC} ${CFLAGS} -Os -c -o lookup2.o lookup2.c
           ${CXX} ${CXXFLAGS} -Os -c -o ldid.o ldid.cpp -std=c++11 -DLDID_VERSION=\"${LDID_VERSION}\"
-          ${CXX} ${CXXFLAGS} -fuse-ld=lld -Os -std=c++11 ldid.o lookup2.o ${ROOT}/usr/lib/libplist-2.0.a ${ROOT}/usr/lib/libcrypto.a -o ldid
+          ${CXX} ${CXXFLAGS} -Os -std=c++11 ldid.o lookup2.o ${ROOT}/usr/lib/libplist-2.0.a ${ROOT}/usr/lib/libcrypto.a -o ldid
           llvm-strip ldid
       - uses: actions/upload-artifact@v1
         with:
