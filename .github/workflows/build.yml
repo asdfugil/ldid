@@ -283,8 +283,8 @@ jobs:
           echo "BUILD_CC=ccache clang" >> $GITHUB_ENV
           echo "BUILD_CXX=ccache clang++" >> $GITHUB_ENV
           echo "BUILD_LD=ld" >> $$GITHUB_ENV
-          echo "CFLAGS=-static -isysroot ${ROOT}" >> $GITHUB_ENV
-          echo "CXXFLAGS=-static -isysroot ${ROOT}" >> $GITHUB_ENV
+          echo "CFLAGS=-static --sysroot ${ROOT}" >> $GITHUB_ENV
+          echo "CXXFLAGS=-static --sysroot ${ROOT}" >> $GITHUB_ENV
           echo "LDFLAGS=-L${ROOT}/usr/lib" >> $GITHUB_ENV
           echo "PKG_CONFIG_PATH=${ROOT}/usr/libdata/pkgconfig" >> $GITHUB_ENV
           echo "LIBRARY_PATH=${ROOT}/usr/lib" >> $GITHUB_ENV
