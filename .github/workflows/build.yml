@@ -273,18 +273,19 @@ jobs:
           echo "LDID_VERSION=$(echo "$(git describe --tags --abbrev=0)")" >> $GITHUB_ENV
       - name: setup toolchain
         run: |
-          sudo apt-get install -y ccache clang-10 build-essential lld
+          sudo apt-get install -y ccache clang-10 build-essential lld llvm-10
           wget -q -nc -P ${DOWNLOAD_PATH} https://ftp.freebsd.org/pub/FreeBSD/releases/amd64/13.0-RELEASE/base.txz
           tar xJf ${DOWNLOAD_PATH}/base.txz -C ${ROOT}
+          chmod -R 755 ${ROOT}
           echo "CC=ccache clang -fuse-ld=lld -target ${TRIPLE}" >> $GITHUB_ENV
-          echo "CXX=ccache clang++ -fuse-ld=/usr/bin/lld -target ${TRIPLE}" >> $GITHUB_ENV
+          echo "CXX=ccache clang++ -fuse-ld=lld -target ${TRIPLE}" >> $GITHUB_ENV
           echo "LD=lld" >> $GITHUB_ENV
           echo "STRIP=llvm-strip" >> $$GITHUB_ENV
           echo "BUILD_CC=ccache clang" >> $GITHUB_ENV
           echo "BUILD_CXX=ccache clang++" >> $GITHUB_ENV
           echo "BUILD_LD=ld" >> $$GITHUB_ENV
-          echo "CFLAGS=-static -isysroot ${ROOT}" >> $GITHUB_ENV
-          echo "CXXFLAGS=-static -isysroot ${ROOT}" >> $GITHUB_ENV
+          echo "CFLAGS=-static --sysroot ${ROOT}" >> $GITHUB_ENV
+          echo "CXXFLAGS=-static --sysroot ${ROOT} -I${ROOT}/usr/include/c++/v1 -stdlib=libc++" >> $GITHUB_ENV
           echo "LDFLAGS=-L${ROOT}/usr/lib" >> $GITHUB_ENV
           echo "PKG_CONFIG_PATH=${ROOT}/usr/libdata/pkgconfig" >> $GITHUB_ENV
           echo "LIBRARY_PATH=${ROOT}/usr/lib" >> $GITHUB_ENV
@@ -307,9 +308,9 @@ jobs:
       - name: build
         run: |
           ${CC} ${CFLAGS} -Os -c -o lookup2.o lookup2.c
-          ${CXX} ${CFLAGS} -Os -c -o ldid.o ldid.cpp -std=c++11 -DLDID_VERSION=\"${LDID_VERSION}\"
-          ${CXX} ${CFLAGS} -Os -std=c++11 ldid.o lookup2.o ${ROOT}/usr/lib/libplist-2.0.a ${ROOT}/usr/lib/libcrypto.a -o ldid
-          llvm-strip ldid
+          ${CXX} ${CXXFLAGS} -Os -c -o ldid.o ldid.cpp -std=c++11 -DLDID_VERSION=\"${LDID_VERSION}\"
+          ${CXX} ${CXXFLAGS} -Os -std=c++11 ldid.o lookup2.o ${ROOT}/usr/lib/libplist-2.0.a ${ROOT}/usr/lib/libcrypto.a -o ldid
+          llvm-strip-10 ldid
       - uses: actions/upload-artifact@v1
         with:
           name: ldid_freebsd_x86_64
